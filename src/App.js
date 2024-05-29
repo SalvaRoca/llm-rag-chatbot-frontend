@@ -8,14 +8,16 @@ import {useState, useRef} from "react";
 import {SelectButton} from "primereact/selectbutton";
 import {InputTextarea} from "primereact/inputtextarea";
 import {Menubar} from "primereact/menubar";
+import {ChatMessage} from "./components/ChatMessage";
 
 
-function App() {
+export const App = () => {
     const [visible, setVisible] = useState(false);
     const [totalSize, setTotalSize] = useState(0);
     const [llm, setLlm] = useState('mistral');
     const [rag, setRag] = useState('langchain');
     const [queryText, setQueryText] = useState('');
+    const [messages, setMessages] = useState([]);
     const toast = useRef(null);
     const fileUploadRef = useRef(null);
 
@@ -41,7 +43,7 @@ function App() {
             label: 'Borrar conversación',
             icon: 'pi pi-trash',
             command: () => {
-                setVisible(true)
+                setMessages([])
             }
         }
     ]
@@ -153,16 +155,47 @@ function App() {
             <SelectButton value={rag} onChange={(e) => setRag(e.value)} options={ragOptions}/>
         </div>
     );
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            if (event.shiftKey) {
+                return;
+            }
+            event.preventDefault();
+            handleSubmit();
+        }
+    };
+
+    const handleSubmit = () => {
+        if (queryText.trim()) {
+            setMessages([...messages, {
+                author: 'Usuario',
+                text: queryText,
+                timestamp: new Date().toLocaleString()
+            }]);
+            setQueryText('');
+        }
+    };
+
     return (
-        <div className="App">
+        <>
             <Menubar model={menuItems} className="surface-ground"/>
             <Toast ref={toast}></Toast>
 
+            <div>
+                {messages.map((message, index) => (
+                    <ChatMessage message={message} key={index} />
+                ))}
+            </div>
+
             <div
                 className="surface-ground px-2 py-2 fixed bottom-0 left-0 right-0 flex justify-content-center align-items-center gap-2">
-                <InputTextarea autoResize value={queryText} onChange={(e) => setQueryText(e.target.value)} rows={1}
-                               className="w-full md:w-auto flex-grow-1"/>
-                <Button icon="pi pi-send" label="Enviar"/>
+                <InputTextarea autoResize value={queryText}
+                               onChange={(e) => setQueryText(e.target.value)}
+                               onKeyDown={handleKeyDown}
+                               rows={1}
+                               className="border-primary w-full justify-content-end"/>
+                <Button icon="pi pi-send" label="Enviar" onClick={handleSubmit}/>
             </div>
 
             <Dialog header="Subir archivos al modelo" style={{width: '50vw'}} visible={visible}
@@ -173,12 +206,13 @@ function App() {
                 <Tooltip target=".custom-upload-btn" content="Cargar" position="bottom"/>
                 <Tooltip target=".custom-cancel-btn" content="Vaciar" position="bottom"/>
 
-                <FileUpload ref={fileUploadRef} name="files" url="http://127.0.0.1:5000/upload" multiple accept="application/pdf"
+                <FileUpload ref={fileUploadRef} name="files" url="http://127.0.0.1:5000/upload" multiple
+                            accept="application/pdf"
                             onUpload={onUpload} onSelect={onSelect} onError={onError} onClear={onClear}
                             headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
                             chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions}/>
             </Dialog>
-        </div>
+        </>
     );
 }
 

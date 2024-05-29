@@ -1,0 +1,46 @@
+.message {
+    max-width: 80%;
+    padding: 0.5rem;
+    border-radius: 8px;
+    clear: both;
+    position: relative;
+    margin: 0.5rem;
+}
+
+.message-user {
+    background-color: #333333;
+    color: white;
+    float: right;
+    padding: 0.8rem;
+    margin-bottom: 0;
+}
+
+.message-bot {
+    background-color: #101827;
+    color: white;
+    float: left;
+    padding: 0.8rem;
+    margin-bottom: 0;
+}
+
+.message p {
+    margin: 0;
+}
+
+.message-footer-user {
+    font-size:0.8rem;
+    color: grey;
+    float: right;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    margin-right: 0;
+}
+
+.message-footer-bot {
+    font-size:0.8rem;
+    color: grey;
+    float: left;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    margin-left: 0;
+}
