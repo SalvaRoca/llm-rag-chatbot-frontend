@@ -10,7 +10,6 @@ import {InputTextarea} from "primereact/inputtextarea";
 import {Menubar} from "primereact/menubar";
 import {ChatMessage} from "./components/ChatMessage";
 
-
 export const App = () => {
     const [visible, setVisible] = useState(false);
     const [totalSize, setTotalSize] = useState(0);
@@ -22,13 +21,13 @@ export const App = () => {
     const fileUploadRef = useRef(null);
 
     const llmOptions = [
-        { label: 'Mistral', value: 'mistral' },
-        { label: 'Llama 3', value: 'llama' }
+        {label: 'Mistral', value: 'mistral'},
+        {label: 'Llama 3', value: 'llama'}
     ];
 
     const ragOptions = [
-        { label: 'LangChain', value: 'langchain' },
-        { label: 'LlamaIndex', value: 'llamaindex' }
+        {label: 'LangChain', value: 'langchain'},
+        {label: 'LlamaIndex', value: 'llamaindex'}
     ];
 
     const menuItems = [
@@ -174,6 +173,40 @@ export const App = () => {
                 timestamp: new Date().toLocaleString()
             }]);
             setQueryText('');
+
+            fetchQueries(queryText)
+                .then(botMessage => {
+                    setMessages(prevMessages => [...prevMessages, botMessage]);
+                })
+                .catch(error => {
+                    console.error('Error en la solicitud Fetch:', error);
+                });
+        }
+    };
+
+    const fetchQueries = async (query) => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/queries', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            });
+
+            if (response.ok) {
+                const text = await response.text();
+                return {
+                    author: 'Bot',
+                    text,
+                    timestamp: new Date().toLocaleString()
+                };
+            } else {
+                console.error('Error en la respuesta:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error en la solicitud Fetch:', error);
+            throw error;
         }
     };
 
@@ -184,7 +217,7 @@ export const App = () => {
 
             <div>
                 {messages.map((message, index) => (
-                    <ChatMessage message={message} key={index} />
+                    <ChatMessage message={message} key={index}/>
                 ))}
             </div>
 
@@ -206,11 +239,11 @@ export const App = () => {
                 <Tooltip target=".custom-upload-btn" content="Cargar" position="bottom"/>
                 <Tooltip target=".custom-cancel-btn" content="Vaciar" position="bottom"/>
 
-                <FileUpload ref={fileUploadRef} name="files" url="http://127.0.0.1:5000/upload" multiple
-                            accept="application/pdf"
-                            onUpload={onUpload} onSelect={onSelect} onError={onError} onClear={onClear}
-                            headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
-                            chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions}/>
+                <FileUpload ref={fileUploadRef} name="files" url={`http://127.0.0.1:5000/models?llm=${llm}&rag=${rag}`}
+                            multiple accept="application/pdf" onUpload={onUpload} onSelect={onSelect} onError={onError}
+                            onClear={onClear} headerTemplate={headerTemplate} itemTemplate={itemTemplate}
+                            emptyTemplate={emptyTemplate} chooseOptions={chooseOptions} uploadOptions={uploadOptions}
+                            cancelOptions={cancelOptions}/>
             </Dialog>
         </>
     );
