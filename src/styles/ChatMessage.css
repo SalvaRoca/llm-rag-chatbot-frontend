@@ -5,6 +5,7 @@
     clear: both;
     position: relative;
     margin: 0.5rem;
+    z-index:-100;
 }
 
 .message-user {
