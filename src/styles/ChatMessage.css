@@ -5,14 +5,13 @@
     clear: both;
     position: relative;
     margin: 0.5rem;
-    z-index:-100;
 }
 
 .message-user {
     background-color: #333333;
     color: white;
     float: right;
-    padding: 0.8rem;
+    padding: 0 0.8rem;
     margin-bottom: 0;
 }
 
@@ -20,12 +19,21 @@
     background-color: #101827;
     color: white;
     float: left;
-    padding: 0.8rem;
+    padding: 0 0.8rem;
     margin-bottom: 0;
 }
 
-.message p {
-    margin: 0;
+.message p, li {
+    line-height: 1.5;
+}
+
+pre {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 10px 0;
 }
 
 .message-footer-user {

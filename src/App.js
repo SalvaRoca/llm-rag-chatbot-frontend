@@ -26,6 +26,7 @@ export const App = () => {
 
     useEffect(() => {
         handleFetchModel();
+        console.log(messages)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -253,7 +254,6 @@ export const App = () => {
             }]);
 
             setQueryText('');
-            console.log("Hola Angelina");
 
             fetchQueries(queryText)
                 .then(botMessage => {
