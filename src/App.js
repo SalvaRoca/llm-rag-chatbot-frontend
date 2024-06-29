@@ -165,7 +165,7 @@ export const App = () => {
 
     const fetchModel = async () => {
         try {
-            const response = await fetch('https://llm-rag-chatbot-backend.onrender.com/models');
+            const response = await fetch('https://sroca.synology.me:5002/models');
 
             if (response.ok) {
                 return await response.json();
@@ -217,7 +217,7 @@ export const App = () => {
 
     const fetchQueries = async (query) => {
         try {
-            const response = await fetch('https://llm-rag-chatbot-backend.onrender.com/queries', {
+            const response = await fetch('https://sroca.synology.me:5002/queries', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -312,7 +312,7 @@ export const App = () => {
                 <Tooltip target=".custom-upload-btn" content="Cargar" position="bottom"/>
                 <Tooltip target=".custom-cancel-btn" content="Vaciar" position="bottom"/>
 
-                <FileUpload ref={fileUploadRef} name="files" url={`https://llm-rag-chatbot-backend.onrender.com/models?llm=${llm}&rag=${rag}`}
+                <FileUpload ref={fileUploadRef} name="files" url={`https://sroca.synology.me:5002/models?llm=${llm}&rag=${rag}`}
                             multiple accept="application/pdf" onUpload={onUpload} onError={onError}
                             headerTemplate={headerTemplate} itemTemplate={itemTemplate}
                             emptyTemplate={emptyTemplate} chooseOptions={chooseOptions} uploadOptions={uploadOptions}
